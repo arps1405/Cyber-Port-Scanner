@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cyber Port Scanner</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap');
+
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Orbitron', sans-serif;
+    background:
+        radial-gradient(circle at top, #0a1a2f, #000),
+        repeating-linear-gradient(
+            0deg,
+            rgba(0,255,255,0.03),
+            rgba(0,255,255,0.03) 1px,
+            transparent 1px,
+            transparent 40px
+        );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #00fff7;
+}
+
+/* MAIN CARD */
+.card {
+    background: rgba(5, 15, 30, 0.9);
+    border: 1px solid rgba(0,255,255,0.3);
+    padding: 30px;
+    width: 420px;
+    border-radius: 18px;
+    box-shadow:
+        0 0 25px rgba(0,255,255,0.2),
+        inset 0 0 20px rgba(0,255,255,0.1);
+    animation: bootUp 1s ease;
+}
+
+@keyframes bootUp {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    text-shadow: 0 0 12px #00fff7;
+}
+
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid rgba(0,255,255,0.4);
+    background: #020b18;
+    color: #00fff7;
+    outline: none;
+    font-size: 14px;
+}
+
+input::placeholder {
+    color: rgba(0,255,255,0.6);
+}
+
+input:focus {
+    box-shadow: 0 0 15px rgba(0,255,255,0.6);
+}
+
+/* SCAN BUTTON */
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 18px;
+    background: linear-gradient(90deg, #00fff7, #00bfff);
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #001;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0,255,255,0.5);
+}
+
+button:hover {
+    box-shadow: 0 0 35px rgba(0,255,255,0.9);
+    transform: scale(1.05);
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+/* MODAL BOX */
+.modal-content {
+    background: #020b18;
+    border: 1px solid rgba(0,255,255,0.4);
+    width: 400px;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow:
+        0 0 40px rgba(0,255,255,0.5),
+        inset 0 0 20px rgba(0,255,255,0.2);
+    animation: glowIn 0.5s ease;
+}
+
+@keyframes glowIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+    color: #ff5f5f;
+}
+
+/* RESULTS */
+.port {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(0,255,255,0.08);
+    border-left: 4px solid #00fff7;
+    transition: 0.3s;
+}
+
+.port:hover {
+    background: rgba(0,255,255,0.25);
+    transform: translateX(6px);
+}
+
+.no-ports {
+    text-align: center;
+    color: #ff9f9f;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1>CYBER PORT SCANNER</h1>
+
+    <form method="POST">
+        <input type="text" name="target" placeholder="TARGET IP / DOMAIN" required>
+        <input type="number" name="start_port" placeholder="START PORT" required>
+        <input type="number" name="end_port" placeholder="END PORT" required>
+        <button type="submit">INITIATE SCAN</button>
+    </form>
+</div>
+
+<div class="modal" id="resultModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">✖</span>
+        <h2>SCAN RESULTS</h2>
+
+        {% if open_ports %}
+            {% for port in open_ports %}
+                <div class="port">PORT {{ port }} — OPEN</div>
+            {% endfor %}
+        {% else %}
+            <div class="no-ports">NO OPEN PORTS DETECTED</div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+{% if open_ports is not none %}
+    document.getElementById("resultModal").style.display = "flex";
+{% endif %}
+
+function closeModal() {
+    document.getElementById("resultModal").style.display = "none";
+}
+</script>
+
+</body>
+</html>
